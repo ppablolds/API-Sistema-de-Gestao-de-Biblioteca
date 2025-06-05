@@ -4,6 +4,7 @@ import com.biblioteca.api.model.Emprestimo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,11 +21,14 @@ public interface EmprestimoRepository extends JpaRepository<Emprestimo, Long> {
     Boolean existsByLivroId(Long livroId);
 
     // Buscar todos os empréstimos ativos (fimEmprestimo é nulo) para um determinado livro
-    Optional<Emprestimo> findByLivroIdAndFimEmprestimoIsNull(Long livroId);
+    Boolean findByLivroIdAndFimEmprestimoIsNull(Long livroId);
 
     // Buscar todos os empréstimos ativos (fimEmprestimo é nulo) para um determinado usuário
     List<Emprestimo> findByUsuarioIdAndFimEmprestimoIsNull(Long usuarioId);
 
     // Verificar se um livro está atualmente emprestado
     Boolean existsByLivroIdAndFimEmprestimoIsNull(Long livroId);
+
+    List<Emprestimo> findByInicioEmprestimoBetween(LocalDateTime start, LocalDateTime end);
+    List<Emprestimo> findByFimEmprestimoIsNull();
 }

@@ -25,4 +25,6 @@ public interface LivroRepository extends JpaRepository<Livro, Long> {
 
     // Buscar um livro por título exato (se houver a necessidade de um título único)
     Optional<Livro> findByTitulo(String titulo);
+
+    boolean existsByAutorLivro_Id(Long id);
 }
