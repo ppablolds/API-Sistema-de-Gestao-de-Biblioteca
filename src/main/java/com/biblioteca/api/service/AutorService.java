@@ -30,8 +30,10 @@ public class AutorService {
         Autor autor = new Autor();
         autor.setNomeAutor(autorDto.getNomeAutor());
 
+        Autor autorSaved = autorRepository.save(autor);
+
         // Salva o autor no repositório
-        return new AutorResponseDto(autor.getId(), autor.getNomeAutor());
+        return new AutorResponseDto(autorSaved.getId(), autorSaved.getNomeAutor());
     }
 
     // Buscar autor por ID
