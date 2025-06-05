@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface EmprestimoRepository extends JpaRepository<Emprestimo, Long> {
@@ -17,4 +18,13 @@ public interface EmprestimoRepository extends JpaRepository<Emprestimo, Long> {
     // Verificar se um empréstimo existe por livro ou usuário
     Boolean existsByUsuarioId(Long usuarioId);
     Boolean existsByLivroId(Long livroId);
+
+    // Buscar todos os empréstimos ativos (fimEmprestimo é nulo) para um determinado livro
+    Optional<Emprestimo> findByLivroIdAndFimEmprestimoIsNull(Long livroId);
+
+    // Buscar todos os empréstimos ativos (fimEmprestimo é nulo) para um determinado usuário
+    List<Emprestimo> findByUsuarioIdAndFimEmprestimoIsNull(Long usuarioId);
+
+    // Verificar se um livro está atualmente emprestado
+    Boolean existsByLivroIdAndFimEmprestimoIsNull(Long livroId);
 }
