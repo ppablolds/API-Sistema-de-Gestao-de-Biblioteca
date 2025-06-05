@@ -5,6 +5,7 @@ import com.biblioteca.api.dto.usuario.UsuarioResponseDto;
 import com.biblioteca.api.exception.BadRequestException;
 import com.biblioteca.api.exception.ResourceNotFoundException;
 import com.biblioteca.api.model.Usuario;
+import com.biblioteca.api.repository.EmprestimoRepository;
 import com.biblioteca.api.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,11 +20,15 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmprestimoRepository emprestimoRepository;
 
     @Autowired
-    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
+    public UsuarioService(UsuarioRepository usuarioRepository,
+                          PasswordEncoder passwordEncoder,
+                          EmprestimoRepository emprestimoRepository) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
+        this.emprestimoRepository = emprestimoRepository;
     }
 
     // Criar um novo usuário
@@ -105,12 +110,12 @@ public class UsuarioService {
             throw new ResourceNotFoundException("Usuário não encontrado com ID: " + id);
         }
 
-        // Deletar o usuário
+        // Verificar se o usuário tem emprestimos
+        if (emprestimoRepository.findByLivroIdAndFimEmprestimoIsNull(id)) {
+            throw new BadRequestException("Não é possível deletar o usuário. Ele possui livros emprestados ativos.");
+        }
 
-        // Lógica de negócio: O que acontece com os empréstimos deste usuário?
-        // - Excluir empréstimos? (Cascade.ALL no relacionamento com Usuario, ou lógica aqui)
-        // - Marcar empréstimos como 'usuário removido'?
-        // Para simplicidade inicial, apenas deletamos.
+        // Deletar o usuário
         usuarioRepository.deleteById(id);
     }
 }

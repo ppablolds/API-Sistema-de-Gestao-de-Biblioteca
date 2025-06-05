@@ -6,17 +6,22 @@ import com.biblioteca.api.exception.BadRequestException;
 import com.biblioteca.api.exception.ResourceNotFoundException;
 import com.biblioteca.api.model.Autor;
 import com.biblioteca.api.repository.AutorRepository;
+import com.biblioteca.api.repository.LivroRepository;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class AutorService {
 
     private final AutorRepository autorRepository;
+    private final LivroRepository livroRepository;
 
-    public AutorService(AutorRepository autorRepository) {
+    public AutorService(AutorRepository autorRepository, LivroRepository livroRepository) {
         this.autorRepository = autorRepository;
+        this.livroRepository = livroRepository;
     }
 
     @Transactional
@@ -41,7 +46,7 @@ public class AutorService {
     public AutorResponseDto buscarAutorPorId(Long id) {
         // Busca o autor pelo ID, ou lança uma exceção se não encontrado
         Autor autor = autorRepository.findById(id)
-                .orElseThrow(() -> new BadRequestException("Autor não encontrado com ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Autor não encontrado com ID: " + id));
 
         // Retornando o DTO de resposta
         return new AutorResponseDto(autor.getId(), autor.getNomeAutor());
@@ -65,7 +70,7 @@ public class AutorService {
     public AutorResponseDto atualizarAutor(Long id, AutorRequestDto autorDto) {
         // Busca o autor pelo ID
         Autor autor = autorRepository.findById(id)
-                .orElseThrow(() -> new BadRequestException("Autor não encontrado com ID: " + id));
+                .orElseThrow(() -> new ResourceNotFoundException("Autor não encontrado com ID: " + id));
 
         // Verifica se o nome do autor já existe
         if (!autorDto.getNomeAutor().equals(autor.getNomeAutor()) &&
@@ -86,8 +91,13 @@ public class AutorService {
     // Deletar autor
     @Transactional
     public void deletarAutor(Long id) {
+        // Verifica se existe livros associados ao autor do livro
+        if (livroRepository.existsByAutorLivro_Id(id)) {
+            throw new BadRequestException("Não é possível deletar o autor. Existem livros associados a ele.");
+        }
+
         // Verificar se o autor existe
-        if (autorRepository.existsById(id)) {
+        if (!autorRepository.existsById(id)) {
             throw new ResourceNotFoundException("Autor não encontrado com ID: " + id);
         }
 

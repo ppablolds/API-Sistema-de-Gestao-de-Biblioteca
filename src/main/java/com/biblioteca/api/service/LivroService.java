@@ -101,7 +101,7 @@ public class LivroService {
 
         //Verificar se o autor do DTO existe
         if (!livroExistente.getAutorLivro().getId().equals(livroDto.getAutorId())) {
-            Autor novoAutor = autorRepository.findById(id)
+            Autor novoAutor = autorRepository.findById(livroDto.getAutorId())
                     .orElseThrow(() -> new ResourceNotFoundException("Novo autor não encontrado com ID: " + livroDto.getAutorId()));
             livroExistente.setAutorLivro(novoAutor);
         }
