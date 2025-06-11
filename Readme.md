@@ -140,7 +140,7 @@ A API segue o padrão RESTful. A seguir, alguns exemplos dos endpoints disponív
 {
   "username": "novoUser",
   "password": "senhaForte",
-  "username": "username@example.com"
+  "email": "username@example.com"
 }
 ````
 **Resposta:** ``201 Created`` com os dados do usuário.
