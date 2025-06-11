@@ -150,7 +150,7 @@ A API segue o padrão RESTful. A seguir, alguns exemplos dos endpoints disponív
 **Body (JSON):** 
 ````json
 {
-  "email": "novoUser",
+  "username": "novoUser",
   "password": "senhaForte"
 }
 ````
