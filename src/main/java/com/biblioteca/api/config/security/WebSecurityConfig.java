@@ -8,6 +8,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -46,11 +47,17 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // Desabilita CSRF para APIs REST
+                .csrf(AbstractHttpConfigurer::disable) // Desabilita CSRF para APIs REST
+                .headers(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // APIs RESTful são stateless
                 .authorizeHttpRequests(authorize -> authorize
                         // Endpoints públicos de autenticação
-                        .requestMatchers("/auth/**", "/error").permitAll() // Permite acesso a /auth/login e /auth/register
+                        .requestMatchers("/auth/**",
+                                                "/error",
+                                                "/h2-console/**",
+                                                "/swagger-ui/**",
+                                                "/v3/api-docs/**",
+                                                "/swagger-ui.html").permitAll() // Permite acesso a /auth/login e /auth/register
                         // Outros endpoints protegidos (exigem autenticação)
                         .requestMatchers("/autores/**").authenticated() // Exige autenticação para /autores
                         .requestMatchers("/livros/**").authenticated() // Exige autenticação para /livros
