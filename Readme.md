@@ -167,7 +167,7 @@ A API segue o padrão RESTful. A seguir, alguns exemplos dos endpoints disponív
 **Body (JSON):**
 ````json
 {
-"nome": "Nome do Autor"
+"nomeAutor": "Nome do Autor"
 }
 ````
 **Resposta:** ``201 Created`` com os dados do autor criado.
@@ -185,7 +185,7 @@ A API segue o padrão RESTful. A seguir, alguns exemplos dos endpoints disponív
 **Body (JSON):**
 ````json
 {
-  "nome": "Novo Nome do Autor"
+  "nomeAutor": "Novo Nome do Autor"
 }
 ````
 
