@@ -30,7 +30,7 @@ public class AuthService {
         try {
             // Tenta autenticar o usuário usando o AuthenticationManager
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword())
+                    new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
             );
         } catch (BadCredentialsException e) {
             // Lança uma exceção se a autenticação falhar (username/password incorretos)
@@ -38,7 +38,7 @@ public class AuthService {
         }
 
         // Se a autenticação foi bem-sucedida, carrega os detalhes do usuário
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getEmail());
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getUsername());
 
         // Gera o token JWT
         final String jwt = jwtUtils.generateToken(userDetails);

@@ -2,22 +2,22 @@ package com.biblioteca.api.dto.auth;
 
 public class AuthRequestDto {
 
-    private String email;
+    private String username;
     private String password;
 
     public AuthRequestDto() {}
 
-    public AuthRequestDto(String email, String password) {
-        this.email = email;
+    public AuthRequestDto(String username, String password) {
+        this.username = username;
         this.password = password;
     }
 
-    public String getEmail() {
-        return email;
+    public String getUsername() {
+        return username;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -31,7 +31,7 @@ public class AuthRequestDto {
     @Override
     public String toString() {
         return "AuthRequestDto{" +
-                "email='" + email + '\'' +
+                "username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 '}';
     }
