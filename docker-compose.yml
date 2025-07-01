@@ -1,0 +1,39 @@
+services:
+  java-app:
+    build:
+      dockerfile: Dockerfile # This now uses the multi-stage Dockerfile above
+      context: .
+    restart: always
+    env_file:
+      - .env
+    environment:
+      DATASOURCE_URL: jdbc:postgresql://db:5432/${DB}
+      SPRING_DATASOURCE_USERNAME: ${USER}
+      SPRING_DATASOURCE_PASSWORD: ${PASSWORD}
+      SPRING_DATASOURCE_HOST: ${HOST}
+      SPRING_DATASOURCE_PORT: ${PORT}
+      SPRING_DATABASE_URL: ${JDBC} #jdbc:postgresql://${HOST}:${PORT}/${DB}?user=${USER}&password=${PASSWORD}
+      JWT: ${JWT_SECRET}
+    ports:
+      - 8080:8080
+    # REMOVE the 'command' line here. The Dockerfile's ENTRYPOINT handles it now.
+    # volumes: # REMOVE volumes if you're building the JAR inside the container
+    #   - .:/app # This line is often removed with multi-stage builds if you don't need live code changes
+    depends_on:
+      - db
+
+  db:
+    image: 'postgres:15-alpine' # Corrected image name
+    environment:
+      POSTGRES_DB: ${DB}
+      POSTGRES_USER: ${USER}
+      POSTGRES_PASSWORD: ${PASSWORD}
+      POSTGRES_HOST: ${HOST}
+      POSTGRES_PORT: ${PORT}
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:
